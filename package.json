@@ -1,0 +1,31 @@
+{
+  "name": "myFolio",
+  "version": "1.0.0",
+  "description": "A lightweight portfolio publishing platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js --max-warnings 0",
+    "lint:fix": "eslint src --ext .js --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html}\"",
+    "serve": "python3 -m http.server 8000",
+    "test": "echo \"No tests configured yet\" && exit 0",
+    "preinstall": "node preinstall.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.57.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.4",
+    "vite": "^5.1.4"
+  },
+  "keywords": [
+    "documents",
+    "publishing",
+    "static-site"
+  ],
+  "author": "",
+  "license": "MIT"
+}

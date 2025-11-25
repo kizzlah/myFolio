@@ -1,0 +1,186 @@
+// Main JavaScript for myFolio
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('myFolio initialized');
+  initializeTheme();
+  initializePortfolioViewer();
+  initializeSearchAndFilters();
+  initializeModal();
+  initializeCreatePortfolio();
+  loadPersistedPortfolios();
+});
+
+function initializePortfolioViewer() {
+  const folioItems = document.querySelectorAll('.portfolio-item');
+  folioItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const title =
+        item.querySelector('h3')?.textContent || 'Untitled Portfolio';
+      const body = item.querySelector('p')?.textContent || '';
+      openModal(title, `<p>${body}</p>`);
+    });
+  });
+}
+
+function initializeSearchAndFilters() {
+  const searchInput = document.getElementById('search-input');
+  const filterButtons = document.querySelectorAll('.filter-btn');
+
+  // Restore last state
+  const lastQuery = localStorage.getItem('myFolio:lastQuery') || '';
+  const lastFilter = localStorage.getItem('myFolio:lastFilter') || 'all';
+  if (searchInput) searchInput.value = lastQuery;
+  filterButtons.forEach(b => {
+    if (b.getAttribute('data-category') === lastFilter) {
+      b.classList.add('active');
+    } else {
+      b.classList.remove('active');
+    }
+  });
+  if (!document.querySelector('.filter-btn.active')) {
+    const btn = document.querySelector('.filter-btn[data-category="all"]');
+    if (btn) btn.classList.add('active');
+  }
+
+  const applyFilters = () => {
+    const items = Array.from(document.querySelectorAll('.portfolio-item'));
+    const query = (searchInput?.value || '').toLowerCase();
+    const activeBtn = document.querySelector('.filter-btn.active');
+    const category = activeBtn?.getAttribute('data-category') || 'all';
+
+    items.forEach(el => {
+      const title = el.querySelector('h3')?.textContent?.toLowerCase() || '';
+      const text = el.querySelector('p')?.textContent?.toLowerCase() || '';
+      const matchesQuery = title.includes(query) || text.includes(query);
+      const matchesCategory =
+        category === 'all' || el.getAttribute('data-category') === category;
+      el.style.display = matchesQuery && matchesCategory ? '' : 'none';
+    });
+
+    // Persist state
+    localStorage.setItem('myFolio:lastQuery', searchInput?.value || '');
+    localStorage.setItem('myFolio:lastFilter', category);
+  };
+
+  searchInput?.addEventListener('input', applyFilters);
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  // Initial filter
+  applyFilters();
+}
+
+function initializeModal() {
+  const modal = document.getElementById('document-modal');
+  const closeBtn = modal?.querySelector('.close-btn');
+
+  closeBtn?.addEventListener('click', () => closeModal());
+  modal?.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+}
+
+function openModal(title, htmlContent) {
+  const modal = document.getElementById('document-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  if (!modal || !modalTitle || !modalBody) return;
+  modalTitle.textContent = title;
+  modalBody.innerHTML = htmlContent;
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  const modal = document.getElementById('document-modal');
+  modal?.classList.remove('open');
+}
+
+function initializeTheme() {
+  const btn = document.getElementById('theme-toggle');
+  const saved = localStorage.getItem('myFolio:theme') || '';
+  if (saved === 'dark') document.body.classList.add('dark-theme');
+  btn?.setAttribute(
+    'aria-pressed',
+    document.body.classList.contains('dark-theme') ? 'true' : 'false'
+  );
+  btn?.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    localStorage.setItem('myFolio:theme', isDark ? 'dark' : 'light');
+  });
+}
+
+function initializeCreatePortfolio() {
+  const openBtn = document.getElementById('new-doc-btn');
+  const modal = document.getElementById('create-modal');
+  const closeBtn = modal?.querySelector('.close-btn');
+  const cancelBtn = document.getElementById('create-cancel');
+  const form = document.getElementById('create-form');
+
+  const open = () => modal?.classList.add('open');
+  const close = () => modal?.classList.remove('open');
+
+  openBtn?.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
+  cancelBtn?.addEventListener('click', close);
+  modal?.addEventListener('click', e => {
+    if (e.target === modal) close();
+  });
+
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('new-title').value.trim();
+    const category = document.getElementById('new-category').value;
+    const summary = document.getElementById('new-summary').value.trim();
+    if (!title || !summary) return;
+
+    const portfolio = { id: Date.now(), title, category, summary };
+    persistPortfolio(portfolio);
+    renderPortfolio(portfolio);
+    close();
+    form.reset();
+    // Re-apply filters with possibly active query/category
+    const evt = new Event('input');
+    document.getElementById('search-input')?.dispatchEvent(evt);
+  });
+}
+
+function renderPortfolio(portfolio) {
+  const list = document.querySelector('.portfolio-list');
+  const template = document.createElement('div');
+  template.className = 'portfolio-item';
+  template.setAttribute('data-category', portfolio.category);
+  template.innerHTML = `<h3>${portfolio.title}</h3><p>${portfolio.summary}</p>`;
+  template.addEventListener('click', () =>
+    openModal(portfolio.title, `<p>${portfolio.summary}</p>`)
+  );
+  list?.appendChild(template);
+}
+
+function persistPortfolio(portfolio) {
+  const key = 'myFolio:portfolios';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.push(portfolio);
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+
+function loadPersistedPortfolios() {
+  const key = 'myFolio:portfolios';
+  try {
+    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+    arr.forEach(renderPortfolio);
+  } catch (_) {
+    // ignore corrupt storage
+  }
+}

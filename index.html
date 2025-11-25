@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myFolio</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>myFolio</h1>
+            <p>A lightweight document publishing platform</p>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="document-controls">
+                <input type="text" id="search-input" placeholder="Searchfolios..." class="search-input">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="tutorial">Tutorial</button>
+                    <button class="filter-btn" data-category="reference">Reference</button>
+                </div>
+                <div class="control-buttons">
+                    <button id="theme-toggle" class="secondary-btn" aria-pressed="false" title="Toggle dark mode">🌙</button>
+                    <button id="new-doc-btn" class="primary-btn">New Document</button>
+                </div>
+            </section>
+            <section class="portfolio-list">
+                <h2>Folios</h2>
+                <div class="portfolio-item" data-category="tutorial">
+                    <h3>Getting Started</h3>
+                    <p>Welcome to your myFolio. This is a minimal document publishing platform.</p>
+                </div>
+                <div class="portfolio-item" data-category="reference">
+                    <h3>Documentation Reference</h3>
+                    <p>Complete documentation and API reference for the platform.</p>
+                </div>
+                <div class="portfolio-item" data-category="tutorial">
+                    <h3>Advanced Features</h3>
+                    <p>Learn about the advanced features available in the platform.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Modal for displaying document content -->
+    <div id="document-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close">&times;</button>
+            <h2 id="modal-title">Portfolio Title</h2>
+            <div id="modal-body">
+                <p>Portfolio content goes here...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for creating a new document -->
+    <div id="create-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="create-title">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close">&times;</button>
+            <h2 id="create-title">Create New Portfolio</h2>
+            <form id="create-form" class="form">
+                <label>
+                    Title
+                    <input type="text" id="new-title" required>
+                </label>
+                <label>
+                    Category
+                    <select id="new-category">
+                        <option value="tutorial">Tutorial</option>
+                        <option value="reference">Reference</option>
+                    </select>
+                </label>
+                <label>
+                    Summary
+                    <textarea id="new-summary" rows="4" required></textarea>
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn">Create</button>
+                    <button type="button" class="secondary-btn" id="create-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 myFolio</p>
+        </div>
+    </footer>
+    
+    <script src="src/js/main.js"></script>
+</body>
+</html>

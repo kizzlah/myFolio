@@ -1,0 +1,255 @@
+/* Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #212529;
+  --bg-secondary: #f8f9fa;
+  --border: #ced4da;
+  --btn-secondary: #6c757d;
+  --btn-primary: #0d6efd;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --max-width: 1200px;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--fg);
+  background-color: var(--bg);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+body.dark-theme {
+  --bg: #1a1a1a;
+  --fg: #e9ecef;
+  --bg-secondary: #343a40;
+  --border: #495057;
+  --btn-secondary: #6c757d;
+  --btn-primary: #3b7bdb;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+.header {
+  background: var(--bg-secondary);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: #6c757d;
+}
+
+/* Main Content */
+.main-content {
+  padding: 2rem 0;
+  min-height: calc(100vh - 200px);
+}
+
+/* Controls */
+.document-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1 1 300px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.primary-btn {
+  color: #ffffff;
+  border-color: var(--btn-primary);
+  background: var(--btn-primary);
+}
+
+.primary-btn:hover,
+.primary-btn:focus {
+  filter: brightness(1.05);
+}
+
+.secondary-btn {
+  background: var(--bg);
+  border-color: var(--btn-secondary);
+  color: var(--fg);
+}
+
+.filter-btn.active {
+  background: var(--btn-primary);
+  border-color: var(--btn-primary);
+  color: #ffffff;
+}
+
+.portfolio-list h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.portfolio-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px var(--shadow);
+}
+
+.portfolio-item h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 720px;
+  width: 100%;
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.close-btn {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#modal-title {
+  margin: 0 0 0.75rem 0;
+}
+
+#modal-body p {
+  margin: 0.5rem 0;
+}
+
+/* Form */
+.form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+  .document-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-buttons,
+  .control-buttons,
+  .form-actions {
+    justify-content: center;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  .modal-content {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .modal {
+    padding: 0;
+  }
+}
+
+/* Footer */
+.footer {
+  background: var(--bg-secondary);
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  margin-top: 2rem;
+}
